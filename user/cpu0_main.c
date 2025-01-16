@@ -21,13 +21,13 @@ int core0_main(void)
      imu660ra_init();  //初始化陀螺仪
     ips200_show_string(0, 16, "code init.");
     speedcount_init(); //初始化编码器
-    ips200_show_string(0, 16, "ov7725 init.");
+    ips200_show_string(0, 16, "mt9v03x init.");
 
     while(1)
     {
-    if(ov7725_init())  //初始化摄像头
+    if(mt9v03x_init())  //初始化摄像头
     {
-        ips200_show_string(0, 16, "ov7725 reinit.");
+        ips200_show_string(0, 16, "mt9v03x reinit.");
         system_delay_ms(100);
     }
     else

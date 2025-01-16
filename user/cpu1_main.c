@@ -36,19 +36,20 @@ void core1_main(void)
     cpu_wait_event_ready();                 // 等待所有核心初始化完毕
     while (TRUE)
     {
-        if(taskNum[3] == TASK_ENABLE) // && (begin_flag == 1 || begin_flag == 2 || begin_flag == 3))
-        {
-          taskNum[3] = 20;
-          if(ov7725_finish_flag)
-          {
-              fps_cnt[2]++;
-              camera_binary_image_decompression(&ov7725_image_binary[0][0], &ov7725_uart_image_dec[0][0], OV7725_H*OV7725_W/8);
-              Get_Attitude();
-              findline();  //巡线
-              caculate_err(); //计算偏差
-              ov7725_finish_flag = 0;
+        TFT180_SHOW();
+        if(mt9v03x_finish_flag)     //一幅图像完全采集完毕后，再进行图像的显示判断和显示
+                {
+                    //Set_image_towvalues(150); //固定阈值二值化
+                    int BandW_threshold = otsuThreshold_fast(mt9v03x_image[0]);//大津法得到动态阈值
+                    Set_image_towvalues(BandW_threshold); //动态阈值二值化，得到二值化后的二维数组mt9v03x_image_BandW
+
+                    Find_Mid_Line(mt9v03x_image_Band[MT9V03X_H][MT9V03X_W]);//找边线
+
+                    tft180_displayimage03x(mt9v03x_image_Band[0],MT9V03X_W,MT9V03X_H);//显示二值化后的图像
+                    Find_Mid_Line_Draw_Line();//画线
+
+                    mt9v03x_finish_flag = 0;//图像显示完成后才对标志位清零
+                }
           }
-      }
-    }
 }
 #pragma section all restore

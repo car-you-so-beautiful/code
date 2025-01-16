@@ -15,6 +15,7 @@
 #include "findline.h"
 #include "gyroscope.h"
 #include "motor.h"
+#include "images.h"
 #include "UI.h"
 #include "bee.h"
 #include "isr.h"
